@@ -131,47 +131,92 @@ const CHECKOUT_COMPLETO_URL = "#checkout-completo";
   }
 })();
 
-// 4. Rastreamento e Injeção de Parâmetros UTM nos Botões de Checkout
+// 4. Rastreamento e Injeção Instantânea de Parâmetros UTM no Clique dos Botões de Checkout (Altemify / Analytics)
 (function () {
   'use strict';
+
   var UTM_STORAGE_KEY = '__astrology_utm_params__';
 
-  function getUtmParams() {
+  function saveCurrentUtms() {
     var search = window.location.search;
     if (search && search.length > 1) {
-      try { sessionStorage.setItem(UTM_STORAGE_KEY, search); } catch (e) {}
-      return new URLSearchParams(search);
+      try {
+        sessionStorage.setItem(UTM_STORAGE_KEY, search);
+        localStorage.setItem(UTM_STORAGE_KEY, search);
+      } catch (e) {}
     }
-    try {
-      var stored = sessionStorage.getItem(UTM_STORAGE_KEY);
-      if (stored) return new URLSearchParams(stored);
-    } catch (e) {}
-    return null;
   }
 
-  function appendUtmsToLinks() {
-    var params = getUtmParams();
-    if (!params) return;
+  function getUtmQueryString() {
+    var search = window.location.search;
+    if (search && search.length > 1) return search;
 
-    document.querySelectorAll('a').forEach(function (link) {
-      var href = link.getAttribute('href');
-      if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+    try {
+      var stored = sessionStorage.getItem(UTM_STORAGE_KEY) || localStorage.getItem(UTM_STORAGE_KEY);
+      if (stored) return stored;
+    } catch (e) {}
 
-      try {
-        var url = new URL(href, window.location.origin);
-        params.forEach(function (val, key) {
-          if (!url.searchParams.has(key)) {
-            url.searchParams.set(key, val);
-          }
-        });
-        link.setAttribute('href', url.toString());
-      } catch (e) {}
+    return '';
+  }
+
+  function injectUtmsToUrl(targetUrl) {
+    if (!targetUrl) return targetUrl;
+    var utmQuery = getUtmQueryString();
+    if (!utmQuery) return targetUrl;
+
+    try {
+      var incomingParams = new URLSearchParams(utmQuery);
+      var anchor = '';
+
+      var hashIdx = targetUrl.indexOf('#');
+      var baseUrl = targetUrl;
+      if (hashIdx !== -1) {
+        anchor = targetUrl.substring(hashIdx);
+        baseUrl = targetUrl.substring(0, hashIdx);
+      }
+
+      var urlParts = baseUrl.split('?');
+      var path = urlParts[0];
+      var existingParams = new URLSearchParams(urlParts[1] || '');
+
+      incomingParams.forEach(function (value, key) {
+        if (!existingParams.has(key)) {
+          existingParams.set(key, value);
+        }
+      });
+
+      var newQuery = existingParams.toString();
+      return path + (newQuery ? '?' + newQuery : '') + anchor;
+    } catch (e) {
+      return targetUrl;
+    }
+  }
+
+  function syncAllCheckoutLinks() {
+    saveCurrentUtms();
+    document.querySelectorAll('a[data-checkout], a[href*="checkout"], a[href*="pay"], a[href*="hotmart"], a[href*="kiwify"], a[href*="monetizze"], a[href*="eduzz"]').forEach(function (link) {
+      var currentHref = link.getAttribute('href');
+      if (currentHref && !currentHref.startsWith('#')) {
+        link.setAttribute('href', injectUtmsToUrl(currentHref));
+      }
     });
   }
 
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('a[data-checkout], a.btn, .plan a');
+    if (!btn) return;
+
+    saveCurrentUtms();
+    var href = btn.getAttribute('href');
+    if (!href || href.startsWith('#')) return;
+
+    var finalCheckoutUrl = injectUtmsToUrl(href);
+    btn.setAttribute('href', finalCheckoutUrl);
+  }, true);
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', appendUtmsToLinks);
+    document.addEventListener('DOMContentLoaded', syncAllCheckoutLinks);
   } else {
-    appendUtmsToLinks();
+    syncAllCheckoutLinks();
   }
 })();
