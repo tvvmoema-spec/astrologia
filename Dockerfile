@@ -18,10 +18,12 @@ RUN npm run build
 # Stage 2: Serve with Nginx for aaPanel / Docker
 FROM nginx:alpine
 
+# Copy custom Nginx config for static routing and assets
+COPY default.conf /etc/nginx/conf.d/default.conf
+
 # Copy build output to Nginx web root
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expose port 80
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
