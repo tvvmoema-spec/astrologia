@@ -131,7 +131,7 @@ const CHECKOUT_COMPLETO_URL = "#checkout-completo";
   }
 })();
 
-// 4. Rastreamento e Injeção Instantânea de Parâmetros UTM no Clique dos Botões de Checkout (Altemify / Analytics)
+// 4. Rastreamento e Injeção Instantânea de Parâmetros UTM no Clique dos Botões de Checkout (Lowtrack / Analytics)
 (function () {
   'use strict';
 
