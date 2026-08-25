@@ -1,0 +1,14 @@
+{
+  "name": "oferta-mapa-astral-100",
+  "version": "1.0.0",
+  "description": "Página de Vendas +100 Mapas Mentais de Astrologia",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}
