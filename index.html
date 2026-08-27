@@ -47,7 +47,8 @@
   </script>
   <!-- End Non-blocking Tracking -->
 
-  <link rel="preload" as="image" href="assets/images/capatopo.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/capatopo-mobile.webp" type="image/webp" media="(max-width: 600px)" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/capatopo.webp" type="image/webp" media="(min-width: 601px)" fetchpriority="high">
   <!-- CSS Principal -->
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -75,8 +76,11 @@
 
       <!-- IMAGEM: MOCKUP DO PRODUTO PRINCIPAL -->
       <div class="hero-art" data-reveal>
-        <img src="assets/images/capatopo.webp" alt="Mockup +100 Mapas Mentais de Astrologia" class="hero-img"
-          loading="eager" fetchpriority="high" decoding="async" width="1254" height="1254">
+        <picture>
+          <source media="(max-width: 600px)" srcset="assets/images/capatopo-mobile.webp" type="image/webp">
+          <img src="assets/images/capatopo.webp" alt="Mockup +100 Mapas Mentais de Astrologia" class="hero-img"
+            loading="eager" fetchpriority="high" decoding="async" width="1254" height="1254">
+        </picture>
       </div>
 
       <div class="hero-copy" data-reveal>
@@ -589,8 +593,11 @@
           <!-- IMAGEM: MOCKUP PLANO BASICO -->
           <div class="art">
             <div class="plan-img-frame">
-              <img src="assets/images/capabasico.webp" alt="Capa do Plano Básico" width="1254" height="1254"
-                loading="lazy">
+              <picture>
+                <source media="(max-width: 600px)" srcset="assets/images/capabasico-mobile.webp" type="image/webp">
+                <img src="assets/images/capabasico.webp" alt="Capa do Plano Básico" width="1254" height="1254"
+                  loading="lazy" decoding="async">
+              </picture>
             </div>
           </div>
           <p class="plan-sub">VOCÊ RECEBE:</p>
@@ -637,8 +644,11 @@
           <!-- IMAGEM: MOCKUP PLANO COMPLETO -->
           <div class="art">
             <div class="plan-img-frame">
-              <img src="assets/images/capacompleto.webp" alt="Mockup do Plano Completo" width="1254" height="1254"
-                loading="lazy">
+              <picture>
+                <source media="(max-width: 600px)" srcset="assets/images/capacompleto-mobile.webp" type="image/webp">
+                <img src="assets/images/capacompleto.webp" alt="Mockup do Plano Completo" width="1254" height="1254"
+                  loading="lazy" decoding="async">
+              </picture>
             </div>
           </div>
 
